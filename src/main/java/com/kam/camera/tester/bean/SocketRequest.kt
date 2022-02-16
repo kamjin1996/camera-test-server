@@ -4,9 +4,12 @@ class SocketRequest() {
 
     var type: String? = null
     var data: Any? = null
-    var uid: Int? = null
+    var uid: String? = null
 }
 
 enum class SocketRequestType {
-    ImageBase64, Connect, ImageClear
+
+    ImageBase64,
+    ImageClear, ;
+
 }

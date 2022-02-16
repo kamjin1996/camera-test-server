@@ -7,5 +7,7 @@ class SocketResponse() {
 }
 
 enum class SocketResponseType {
-    ImageSavedCount, ConnectSuccess
+    ImageSavedCount,
+    ConnectSuccess,
+    ImageSavePath, ;
 }
