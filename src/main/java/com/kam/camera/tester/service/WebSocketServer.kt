@@ -35,7 +35,7 @@ class WebSocketServer {
         this.uid = uid
 
         UidServersHolder.add(uid, this)
-        log.info("【uid: ${uid} 加入】当前在线人数为${UidServersHolder.countOnline()}")
+        log.info("【uid: $uid 加入】当前在线人数为${UidServersHolder.countOnline()}")
         SocketResponseType.ConnectSuccess.response("连接成功", uid)
     }
 
@@ -45,7 +45,7 @@ class WebSocketServer {
     @OnClose
     fun onClose(session: Session, @PathParam("uid") uid: String) {
         UidServersHolder.remove(uid)
-        log.info("【uid: ${uid} 离线】当前在线人数为${UidServersHolder.countOnline()}")
+        log.info("【uid: $uid 离线】当前在线人数为${UidServersHolder.countOnline()}")
     }
 
     /**
@@ -81,7 +81,7 @@ class WebSocketServer {
 
     @OnError
     fun onError(session: Session?, error: Throwable) {
-        log.error("发生错误", error)
+        log.error("websocket 发生错误", error)
     }
 
     companion object {

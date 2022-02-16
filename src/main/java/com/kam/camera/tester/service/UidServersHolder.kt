@@ -10,20 +10,18 @@ class UidServersHolder {
         val imageHandleMap = ConcurrentHashMap<String, ImageHandleServer>()
 
         fun countOnline(): Int {
-            return webSocketMap.size
+            return webSocketMap.count()
         }
 
         fun remove(uid: String) {
-            webSocketMap.remove(uid)
-            imageHandleMap.remove(uid)
+            with(uid) {
+                webSocketMap.remove(this)
+                imageHandleMap.remove(this)
+            }
         }
 
-        fun add(uid: String, ws: WebSocketServer) {
-            webSocketMap[uid] = ws
-        }
+        fun add(uid: String, ws: WebSocketServer) = ws.also { webSocketMap[uid] = it }
 
-        fun add(uid: String, imageHandleServer: ImageHandleServer) {
-            imageHandleMap[uid] = imageHandleServer
-        }
+        fun add(uid: String, imageHandleServer: ImageHandleServer) = imageHandleServer.also { imageHandleMap[uid] = it }
     }
 }

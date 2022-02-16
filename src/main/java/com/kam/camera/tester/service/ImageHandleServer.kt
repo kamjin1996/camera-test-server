@@ -37,7 +37,7 @@ class ImageHandleServer(ws: WebSocketServer) {
 
     private val subDir: Lazy<File> = lazy {
         this.imageSaveDir = SpringContextHolder.getBean(WebSocketConfig::class.java).imageSaveDir
-        val path = imageSaveDir + "\\" + uid
+        val path = "$imageSaveDir\\$uid"
         ImageSavePath.response(path, uid)
         File(path)
     }

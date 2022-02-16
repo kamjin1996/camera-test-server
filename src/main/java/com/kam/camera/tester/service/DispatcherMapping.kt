@@ -11,7 +11,7 @@ var log: Logger = LoggerFactory.getLogger(SocketRequestType::class.java)
 fun SocketRequestType.handle(request: SocketRequest) {
     val ws = UidServersHolder.webSocketMap[request.uid]
     if (ws == null) {
-        log.error("uid: ${request.uid} ws server not init")
+        log.error("uid: ${request.uid} ws server not found")
         return
     }
 
