@@ -10,7 +10,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.lang.Exception
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.properties.Delegates
 
 /**
@@ -21,7 +20,7 @@ class ImageHandleServer(ws: WebSocketServer) {
     private var uid: String = ws.uid
 
     init {
-        imageHandleMap[ws.uid] = this
+        UidServersHolder.add(ws.uid, this)
     }
 
     val log: Logger = LoggerFactory.getLogger(this::class.java)
@@ -76,11 +75,5 @@ class ImageHandleServer(ws: WebSocketServer) {
         return imageBase64.substringBefore(",")//data:image/jpeg;base64
             .substringBefore(";")//data:image/jpeg
             .substringAfter("/")//jpeg
-    }
-
-    companion object {
-
-        val imageHandleMap = ConcurrentHashMap<String, ImageHandleServer>()
-
     }
 }

@@ -3,12 +3,19 @@ package com.kam.camera.tester.service
 import com.kam.camera.tester.bean.SocketRequest
 import com.kam.camera.tester.bean.SocketRequestType
 import com.kam.camera.tester.bean.SocketResponseType
-import java.lang.RuntimeException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
+var log: Logger = LoggerFactory.getLogger(SocketRequestType::class.java)
 
 fun SocketRequestType.handle(request: SocketRequest) {
-    val ws =
-        WebSocketServer.webSocketMap[request.uid] ?: throw RuntimeException("uid: ${request.uid} ws server not init")
-    val imageHandle = ImageHandleServer.imageHandleMap[request.uid] ?: ImageHandleServer(ws)
+    val ws = UidServersHolder.webSocketMap[request.uid]
+    if (ws == null) {
+        log.error("uid: ${request.uid} ws server not init")
+        return
+    }
+
+    val imageHandle = UidServersHolder.imageHandleMap[request.uid] ?: ImageHandleServer(ws)
     when (this) {
         SocketRequestType.ImageBase64 -> imageHandle.savePhoto(request)
         SocketRequestType.ImageClear -> imageHandle.clearSavedPhoto(request)
@@ -16,5 +23,5 @@ fun SocketRequestType.handle(request: SocketRequest) {
 }
 
 fun SocketResponseType.response(data: Any, vararg uid: String?) {
-    uid.forEach { WebSocketServer.webSocketMap[it]?.sendMessageJson(this, data) }
+    uid.forEach { UidServersHolder.webSocketMap[it]?.sendMessageJson(this, data) }
 }

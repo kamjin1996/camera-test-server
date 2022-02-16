@@ -12,7 +12,6 @@ import com.kam.camera.tester.bean.SocketRequestType
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
-import java.util.concurrent.ConcurrentHashMap
 import javax.websocket.*
 
 @Component
@@ -35,8 +34,8 @@ class WebSocketServer {
         this.session = session
         this.uid = uid
 
-        webSocketMap[uid] = this //加入set中
-        log.info("【uid: ${uid} 加入】当前在线人数为${webSocketMap.size}")
+        UidServersHolder.add(uid, this)
+        log.info("【uid: ${uid} 加入】当前在线人数为${UidServersHolder.countOnline()}")
         SocketResponseType.ConnectSuccess.response("连接成功", uid)
     }
 
@@ -45,8 +44,8 @@ class WebSocketServer {
      */
     @OnClose
     fun onClose(session: Session, @PathParam("uid") uid: String) {
-        webSocketMap.remove(uid)
-        log.info("【uid: ${uid} 离线】当前在线人数为${webSocketMap.size}")
+        UidServersHolder.remove(uid)
+        log.info("【uid: ${uid} 离线】当前在线人数为${UidServersHolder.countOnline()}")
     }
 
     /**
@@ -89,8 +88,6 @@ class WebSocketServer {
 
         private val log: Logger = LoggerFactory.getLogger(WebSocketServer::javaClass.name)
 
-        val webSocketMap = ConcurrentHashMap<String, WebSocketServer>()
-
         /**
          * 群发自定义消息
          */
@@ -98,9 +95,9 @@ class WebSocketServer {
         fun sendInfo(message: String, @PathParam("uid") uid: String?) {
             log.info("推送消息到窗口$uid，推送内容:$message")
             if (uid == null) {
-                webSocketMap.values.forEach { it.sendMessage(message) }
+                UidServersHolder.webSocketMap.values.forEach { it.sendMessage(message) }
             } else {
-                webSocketMap[uid]?.sendMessage(message)
+                UidServersHolder.webSocketMap[uid]?.sendMessage(message)
             }
         }
 
