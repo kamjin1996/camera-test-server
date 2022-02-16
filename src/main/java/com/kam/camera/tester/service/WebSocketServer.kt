@@ -45,8 +45,8 @@ class WebSocketServer {
      */
     @OnClose
     fun onClose(session: Session, @PathParam("uid") uid: String) {
-        log.info("【uid: ${uid} 离线】当前在线人数为${webSocketMap.size}")
         webSocketMap.remove(uid)
+        log.info("【uid: ${uid} 离线】当前在线人数为${webSocketMap.size}")
     }
 
     /**
