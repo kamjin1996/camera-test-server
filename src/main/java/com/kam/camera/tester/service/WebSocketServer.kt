@@ -36,7 +36,7 @@ class WebSocketServer {
         this.uid = uid
 
         webSocketMap[uid] = this //加入set中
-        log.info("uid: ${uid}加入 当前在线人数为${webSocketMap.size}")
+        log.info("【uid: ${uid} 加入】当前在线人数为${webSocketMap.size}")
         SocketResponseType.ConnectSuccess.response("连接成功", uid)
     }
 
@@ -45,6 +45,7 @@ class WebSocketServer {
      */
     @OnClose
     fun onClose(session: Session, @PathParam("uid") uid: String) {
+        log.info("【uid: ${uid} 离线】当前在线人数为${webSocketMap.size}")
         webSocketMap.remove(uid)
     }
 
